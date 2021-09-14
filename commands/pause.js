@@ -1,4 +1,4 @@
-const {GuildMember} = require('discord.js');
+const { GuildMember } = require('discord.js');
 
 module.exports = {
   name: 'pause',

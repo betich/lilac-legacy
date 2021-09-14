@@ -1,10 +1,12 @@
 {
-  "name": "music-bot",
-  "version": "1.0.0",
-  "repository": "https://github.com/TannerGabriel/discord-music-bot.git",
-  "description": "A simple discord music bot",
+  "name": "lilac",
+  "version": "1.1.0",
+  "repository": "https://github.com/betich/lilac.git",
+  "description": "a simple discord music bot",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -18,8 +20,12 @@
     "@discordjs/opus": "^0.6.0",
     "discord-player": "^5.0.2",
     "discord.js": "^13.1.0",
+    "dotenv": "^10.0.0",
     "ffmpeg": "0.0.4",
     "fluent-ffmpeg": "^2.1.2",
     "ytdl-core": "^4.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }

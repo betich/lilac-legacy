@@ -1,5 +1,5 @@
-const {GuildMember} = require('discord.js');
-const {QueryType} = require('discord-player');
+const { GuildMember } = require('discord.js');
+const { QueryType } = require('discord-player');
 
 module.exports = {
   name: 'play',
@@ -41,7 +41,7 @@ module.exports = {
         })
         .catch(() => {});
       if (!searchResult || !searchResult.tracks.length)
-        return void interaction.followUp({content: 'No results were found!'});
+        return void interaction.followUp({ content: 'No results were found!' });
 
       const queue = await player.createQueue(interaction.guild, {
         metadata: interaction.channel,

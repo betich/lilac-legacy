@@ -1,11 +1,10 @@
 const fs = require('fs');
-const Discord = require('discord.js');
+// const Discord = require('discord.js');
 const Client = require('./client/Client');
-const {token} = require('./config.json');
-const {Player} = require('discord-player');
+const { token, prefix } = require('./config.js');
+const { Player } = require('discord-player');
 
 const client = new Client();
-client.commands = new Discord.Collection();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -58,18 +57,41 @@ client.once('disconnect', () => {
   console.log('Disconnect!');
 });
 
-client.on("messageCreate", async (message) => {
+client.on('messageCreate', async message => {
   if (message.author.bot || !message.guild) return;
   if (!client.application?.owner) await client.application?.fetch();
 
-  if (message.content === "!deploy" && message.author.id === client.application?.owner?.id) {
-      await message.guild.commands.set(client.commands).then(() => {
-        message.reply("Deployed!");
+  if (message.content === `${prefix}deploy` && message.member.permissions.has('ADMINISTRATOR')) {
+    await message.guild.commands
+      .set(client.commands)
+      .then(() => {
+        message.reply('Deployed!');
       })
-      .catch((err) => {
-        message.reply("Could not deploy commands! Make sure the bot has the application.commands permission!");
-        console.error(err)
+      .catch(err => {
+        message.reply('Could not deploy commands! Make sure the bot has the application.commands permission!');
+        console.error(err);
       });
+  } else {
+    if (message.content.startsWith(prefix)) {
+      try {
+        const [commandName, ...args] = message.content.shift(prefix.length).split(/\s+/g);
+        const context = {
+          ...message,
+          args,
+        };
+
+        /* execute message
+        if (commandName == 'ban' || commandName == 'userinfo') {
+          command.execute(context, client);
+        } else {
+          command.execute(context, player);
+        }
+        */
+      } catch (error) {
+        message.reply('There was an error.');
+        console.error(error);
+      }
+    }
   }
 });
 

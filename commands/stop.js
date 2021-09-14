@@ -1,4 +1,4 @@
-const {GuildMember} = require('discord.js');
+const { GuildMember } = require('discord.js');
 
 module.exports = {
   name: 'stop',
@@ -28,6 +28,6 @@ module.exports = {
         content: '❌ | No music is being played!',
       });
     queue.destroy();
-    return void interaction.followUp({content: '🛑 | Stopped the player!'});
+    return void interaction.followUp({ content: '🛑 | Stopped the player!' });
   },
 };
