@@ -47,6 +47,8 @@ player.on('queueEnd', queue => {
 
 client.once('ready', async () => {
   console.log('Ready!');
+
+  client.user.setActivity(`with your feelings`, { type: 'PLAYING' });
 });
 
 client.once('reconnecting', () => {
