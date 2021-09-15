@@ -4,7 +4,7 @@ const Client = require('./client/Client');
 const { token, prefix } = require('./config.js');
 const { Player } = require('discord-player');
 
-const client = new Client();
+const client = new Client({ color: 0x7734eb });
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -105,11 +105,7 @@ client.on('interactionCreate', async interaction => {
   const command = client.commands.get(interaction.commandName.toLowerCase());
 
   try {
-    if (interaction.commandName == 'ban' || interaction.commandName == 'userinfo') {
-      command.execute(interaction, client);
-    } else {
-      command.execute(interaction, player);
-    }
+    command.execute(interaction, player, client);
   } catch (error) {
     console.error(error);
     interaction.followUp({

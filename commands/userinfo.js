@@ -9,7 +9,7 @@ module.exports = {
       required: true,
     },
   ],
-  execute(interaction, client) {
+  execute(interaction, player, client) {
     const member = interaction.options.get('user').value;
     const user = client.users.cache.get(member);
 
