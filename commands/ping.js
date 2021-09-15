@@ -1,17 +1,34 @@
-module.exports = {
-  name: 'bassboost',
-  description: 'Toggles bassboost filter',
-  async execute(interaction, player, client) {
-    await interaction.deferReply();
-    const queue = player.getQueue(interaction.guildId);
-    if (!queue || !queue.playing) return void interaction.followUp({ content: '❌ | No music is being played!' });
-    await queue.setFilters({
-      bassboost: !queue.getFiltersEnabled().includes('bassboost'),
-      normalizer2: !queue.getFiltersEnabled().includes('bassboost'), // because we need to toggle it with bass
-    });
+const { config } = require('dotenv');
 
-    return void interaction.followUp({
-      content: `🎵 | Bassboost ${queue.getFiltersEnabled().includes('bassboost') ? 'Enabled' : 'Disabled'}!`,
-    });
+module.exports = {
+  name: 'ping',
+  description: 'Shows bot latency',
+  async execute(interaction, player, client) {
+    if (!interaction.isCommand() || !interaction.guildId) return;
+
+    if (interaction.commandName === 'ping') {
+      await interaction.deferReply();
+      const queue = player.getQueue(interaction.guild);
+
+      return void interaction.followUp({
+        embeds: [
+          {
+            title: '⏱️ | Latency',
+            fields: [
+              { name: 'Bot Latency', value: `\`${Math.round(client.ws.ping)}ms\`` },
+              {
+                name: 'Voice Latency',
+                value: !queue
+                  ? 'N/A'
+                  : `UDP: \`${queue.connection.voiceConnection.ping.udp ?? 'N/A'}\`ms\nWebSocket: \`${
+                      queue.connection.voiceConnection.ping.ws ?? 'N/A'
+                    }\`ms`,
+              },
+            ],
+            color: client.config.color,
+          },
+        ],
+      });
+    }
   },
 };
