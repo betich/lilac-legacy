@@ -1,33 +1,17 @@
 module.exports = {
-  name: 'queue',
-  description: 'See the queue',
+  name: 'bassboost',
+  description: 'Toggles bassboost filter',
   async execute(interaction, player, client) {
     await interaction.deferReply();
     const queue = player.getQueue(interaction.guildId);
     if (!queue || !queue.playing) return void interaction.followUp({ content: '❌ | No music is being played!' });
-
-    const currentTrack = queue.current;
-    const tracks = queue.tracks.slice(0, 10).map((m, i) => {
-      return `${i + 1}. **${m.title}** ([link](${m.url}))`;
+    await queue.setFilters({
+      bassboost: !queue.getFiltersEnabled().includes('bassboost'),
+      normalizer2: !queue.getFiltersEnabled().includes('bassboost'), // because we need to toggle it with bass
     });
 
     return void interaction.followUp({
-      embeds: [
-        {
-          title: 'Server Queue',
-          description: `${tracks.join('\n')}${
-            queue.tracks.length > tracks.length
-              ? `\n...${
-                  queue.tracks.length - tracks.length === 1
-                    ? `${queue.tracks.length - tracks.length} more track`
-                    : `${queue.tracks.length - tracks.length} more tracks`
-                }`
-              : ''
-          }`,
-          color: client.config.color,
-          fields: [{ name: 'Now Playing', value: `🎶 | **${currentTrack.title}** ([link](${currentTrack.url}))` }],
-        },
-      ],
+      content: `🎵 | Bassboost ${queue.getFiltersEnabled().includes('bassboost') ? 'Enabled' : 'Disabled'}!`,
     });
   },
 };
