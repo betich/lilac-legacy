@@ -64,19 +64,28 @@ client.on('messageCreate', async message => {
   if (!client.application?.owner) await client.application?.fetch();
 
   if (message.content === `${prefix}deploy`) {
-    if (message.member.permissions.has('ADMINISTRATOR')) {
-      await message.guild.commands
-        .set(client.commands)
-        .then(() => {
-          message.reply('Deployed!');
-        })
-        .catch(err => {
-          message.reply('Could not deploy commands! Make sure the bot has the application.commands permission!');
-          console.error(err);
-        });
-    } else {
-      message.reply('You need to have an adminstrator permission to use that command!');
-    }
+    await message.guild.commands
+      .set(client.commands)
+      .then(() => {
+        message.reply('Deployed!');
+      })
+      .catch(err => {
+        message.reply('Could not deploy commands! Make sure the bot has the application.commands permission!');
+        console.error(err);
+      });
+    // if (message.member.permissions.has('ADMINISTRATOR')) {
+    //   await message.guild.commands
+    //     .set(client.commands)
+    //     .then(() => {
+    //       message.reply('Deployed!');
+    //     })
+    //     .catch(err => {
+    //       message.reply('Could not deploy commands! Make sure the bot has the application.commands permission!');
+    //       console.error(err);
+    //     });
+    // } else {
+    //   message.reply('You need to have an adminstrator permission to use that command!');
+    // }
   } else {
     if (message.content.startsWith(prefix)) {
       try {
