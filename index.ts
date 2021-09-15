@@ -1,15 +1,15 @@
-const fs = require('fs');
 // const Discord = require('discord.js');
-const Client = require('./client/Client');
-const { token, prefix } = require('./config.js');
-const { Player } = require('discord-player');
+import * as fs from 'fs';
+import DiscordClient, { Command } from './client/Client';
+import { token, prefix } from './config';
+import { Player } from 'discord-player';
 
-const client = new Client({ color: 0x7734eb });
+const client = new DiscordClient({ color: 0x7734eb });
 
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.ts'));
 
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
+for await (const file of commandFiles) {
+  const command: Command = await import(`./commands/${file}`);
   client.commands.set(command.name, command);
 }
 
@@ -80,7 +80,7 @@ client.on('messageCreate', async message => {
   } else {
     if (message.content.startsWith(prefix)) {
       try {
-        const [commandName, ...args] = message.content.shift(prefix.length).split(/\s+/g);
+        const [commandName, ...args] = message.content.substring(prefix.length).split(/\s+/g);
         const context = {
           ...message,
           args,

@@ -1,5 +1,3 @@
-const { GuildMember } = require('discord.js');
-
 module.exports = {
   name: 'skip',
   description: 'Skip a song!',
