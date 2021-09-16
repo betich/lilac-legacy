@@ -18,30 +18,35 @@ console.log(client.commands);
 const player = new Player(client);
 
 player.on('error', (queue, error) => {
-  console.log(`[${queue.guild.name}] Error emitted from the queue: ${error.message}`);
+  console.error(`[${queue.guild.name}] Error emitted from the queue: ${error.message}`);
 });
 
 player.on('connectionError', (queue, error) => {
-  console.log(`[${queue.guild.name}] Error emitted from the connection: ${error.message}`);
+  console.error(`[${queue.guild.name}] Error emitted from the connection: ${error.message}`);
 });
 
 player.on('trackStart', (queue, track) => {
+  console.log(`🎶 | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`);
   queue.metadata.send(`🎶 | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`);
 });
 
 player.on('trackAdd', (queue, track) => {
+  console.log(`🎶 | Track **${track.title}** queued!`);
   queue.metadata.send(`🎶 | Track **${track.title}** queued!`);
 });
 
 player.on('botDisconnect', queue => {
+  console.log('❌ | I was manually disconnected from the voice channel, clearing queue!');
   queue.metadata.send('❌ | I was manually disconnected from the voice channel, clearing queue!');
 });
 
 player.on('channelEmpty', queue => {
+  console.log('❌ | Nobody is in the voice channel, leaving...');
   queue.metadata.send('❌ | Nobody is in the voice channel, leaving...');
 });
 
 player.on('queueEnd', queue => {
+  console.log('✅ | Queue finished!');
   queue.metadata.send('✅ | Queue finished!');
 });
 
