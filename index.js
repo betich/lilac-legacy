@@ -55,7 +55,7 @@ player.on('queueEnd', queue => {
 client.once('ready', async () => {
   console.log('Ready!');
 
-  console.log(`Deploying to ${client.guilds.cache.size} servers`);
+  console.log(`🚀 Deploying to ${client.guilds.cache.size} servers`);
 
   await client.guilds.cache.forEach(async g => {
     await g.commands
@@ -80,7 +80,7 @@ client.once('disconnect', () => {
 });
 
 client.on('messageCreate', async message => {
-  console.log(`message: ${message.content}`);
+  console.log(`📝 ${message.guild.name}: ${message.content}`);
 
   if (message.author.bot || !message.guild) return;
   if (!client.application?.owner) await client.application?.fetch();
@@ -89,7 +89,7 @@ client.on('messageCreate', async message => {
     await message.guild.commands
       .set(client.commands)
       .then(() => {
-        message.reply('Deployed!');
+        message.reply('🚀 Deployed!');
       })
       .catch(err => {
         message.reply('Could not deploy commands! Make sure the bot has the application.commands permission!');
@@ -145,7 +145,7 @@ client.on('guildCreate', async guild => {
   await guild.commands
     .set(client.commands)
     .then(() => {
-      console.log(`Deployed to ${guild.name}`);
+      console.log(`🚀 Deployed to ${guild.name}`);
     })
     .catch(err => {
       console.error(err);
