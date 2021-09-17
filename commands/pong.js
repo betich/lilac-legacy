@@ -1,5 +1,5 @@
 module.exports = {
-  name: 'ping',
+  name: 'pong',
   description: 'Shows bot latency',
   async execute(interaction, player, client) {
     if (!interaction.isCommand() || !interaction.guildId) return;

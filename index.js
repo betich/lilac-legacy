@@ -17,41 +17,56 @@ console.log(client.commands);
 
 const player = new Player(client);
 
+const logInfo = queue => `${new Date()} | ${queue.guild.name} | `;
+
 player.on('error', (queue, error) => {
-  console.error(`[${queue.guild.name}] Error emitted from the queue: ${error.message}`);
+  console.error(logInfo(queue) + `[${queue.guild.name}] Error emitted from the queue: ${error.message}`);
 });
 
 player.on('connectionError', (queue, error) => {
-  console.error(`[${queue.guild.name}] Error emitted from the connection: ${error.message}`);
+  console.error(logInfo(queue) + `[${queue.guild.name}] Error emitted from the connection: ${error.message}`);
 });
 
 player.on('trackStart', (queue, track) => {
-  console.log(`🎶 | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`);
+  console.log(logInfo(queue) + `🎶 | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`);
   queue.metadata.send(`🎶 | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`);
 });
 
 player.on('trackAdd', (queue, track) => {
-  console.log(`🎶 | Track **${track.title}** queued!`);
+  console.log(logInfo(queue) + `🎶 | Track **${track.title}** queued!`);
   queue.metadata.send(`🎶 | Track **${track.title}** queued!`);
 });
 
 player.on('botDisconnect', queue => {
-  console.log('❌ | I was manually disconnected from the voice channel, clearing queue!');
+  console.log(logInfo(queue) + '❌ | I was manually disconnected from the voice channel, clearing queue!');
   queue.metadata.send('❌ | I was manually disconnected from the voice channel, clearing queue!');
 });
 
 player.on('channelEmpty', queue => {
-  console.log('❌ | Nobody is in the voice channel, leaving...');
+  console.log(logInfo(queue) + '❌ | Nobody is in the voice channel, leaving...');
   queue.metadata.send('❌ | Nobody is in the voice channel, leaving...');
 });
 
 player.on('queueEnd', queue => {
-  console.log('✅ | Queue finished!');
+  console.log(logInfo(queue) + '✅ | Queue finished!');
   queue.metadata.send('✅ | Queue finished!');
 });
 
 client.once('ready', async () => {
   console.log('Ready!');
+
+  console.log(`Deploying to ${client.guilds.cache.size} servers`);
+
+  await client.guilds.cache.forEach(async g => {
+    await g.commands
+      .set(client.commands)
+      .then(() => {
+        console.log('Deployed!');
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  });
 
   client.user.setActivity(`with your feelings`, { type: 'PLAYING' });
 });
@@ -79,34 +94,28 @@ client.on('messageCreate', async message => {
         console.error(err);
       });
     // if (message.member.permissions.has('ADMINISTRATOR')) {
-    //   await message.guild.commands
-    //     .set(client.commands)
-    //     .then(() => {
-    //       message.reply('Deployed!');
-    //     })
-    //     .catch(err => {
-    //       message.reply('Could not deploy commands! Make sure the bot has the application.commands permission!');
-    //       console.error(err);
-    //     });
     // } else {
     //   message.reply('You need to have an adminstrator permission to use that command!');
     // }
   } else {
     if (message.content.startsWith(prefix)) {
       try {
-        const [commandName, ...args] = message.content.shift(prefix.length).split(/\s+/g);
+        const [commandName, ...args] = message.content.substring(prefix.length).split(/\s+/g);
         const context = {
-          ...message,
+          message,
           args,
         };
 
-        /* execute message
-        if (commandName == 'ban' || commandName == 'userinfo') {
-          command.execute(context, client);
-        } else {
-          command.execute(context, player);
+        const command =
+          client.commands.get(commandName) ||
+          client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+
+        if (!command) {
+          return void message.reply('Unkown command');
         }
-        */
+
+        // execute message
+        command.executeMessage(message, player, client);
       } catch (error) {
         message.reply('There was an error.');
         console.error(error);
@@ -126,6 +135,19 @@ client.on('interactionCreate', async interaction => {
       content: 'There was an error trying to execute that command!',
     });
   }
+});
+
+client.on('guildCreate', async guild => {
+  console.log(`Joined ${guild.name}!`);
+
+  await guild.commands
+    .set(client.commands)
+    .then(() => {
+      console.log('Deployed!');
+    })
+    .catch(err => {
+      console.error(err);
+    });
 });
 
 client.login(token);

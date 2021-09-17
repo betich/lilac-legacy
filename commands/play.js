@@ -1,5 +1,6 @@
 const { GuildMember } = require('discord.js');
 const { QueryType } = require('discord-player');
+const { executeMessage } = require('./ping');
 
 module.exports = {
   name: 'play',
@@ -68,4 +69,5 @@ module.exports = {
       });
     }
   },
+  async executeMessage(message, player, client) {},
 };
