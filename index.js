@@ -18,7 +18,9 @@ console.log(client.commands);
 const player = new Player(client);
 
 const d = new Date();
-const timeLog = `${d.getUTCDate()}/${d.getUTCMonth()+1}/${d.getUTCFullYear()} ${d.toLocaleTimeString('th-TH', { timeZone: 'Asia/Bangkok' })}`
+const timeLog = `${d.getUTCDate()}/${d.getUTCMonth() + 1}/${d.getUTCFullYear()} ${d.toLocaleTimeString('th-TH', {
+  timeZone: 'Asia/Bangkok',
+})}`;
 const logInfo = queue => `${timeLog} | ${queue.guild.name} | `;
 
 player.on('error', (queue, error) => {
@@ -63,7 +65,7 @@ client.once('ready', async () => {
     await g.commands
       .set(client.commands)
       .then(() => {
-        console.log(`Deployed to ${g.name}`);
+        console.log(`🚀 Deployed to ${g.name}`);
       })
       .catch(err => {
         console.error(err);
