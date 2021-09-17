@@ -15,8 +15,9 @@ for (const file of commandFiles) {
 
 console.log(client.commands);
 
-const player = new Player(client);
+const player = new Player(client, { connectionTimeout: 5 * 3600 }); // 5 mins
 
+// just logging things hehe
 const d = new Date();
 const timeLog = `${d.getUTCDate()}/${d.getUTCMonth() + 1}/${d.getUTCFullYear()} ${d.toLocaleTimeString('th-TH', {
   timeZone: 'Asia/Bangkok',
@@ -32,13 +33,27 @@ player.on('connectionError', (queue, error) => {
 });
 
 player.on('trackStart', (queue, track) => {
-  console.log(logInfo(queue) + `🎶 | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`);
-  queue.metadata.send(`🎶 | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`);
+  console.log(logInfo(queue) + `🎶 | Started playing: ${track.title} in ${queue.connection.channel.name}!`);
+  // queue.metadata.send(`🎶 | Started playing: [${track.title}](${track.url}) in ${queue.connection.channel.name}!`);
+  queue.metadata.send({
+    embeds: [
+      {
+        title: '🎶 | Started playing',
+        color: client.config.color,
+        fields: [
+          {
+            name: 'Now Playing',
+            value: `🎶 [${track.duration}] [${track.title}](${track.url})`,
+          },
+        ],
+      },
+    ],
+  });
 });
 
 player.on('trackAdd', (queue, track) => {
-  console.log(logInfo(queue) + `🎶 | Track **${track.title}** queued!`);
-  queue.metadata.send(`🎶 | Track **${track.title}** queued!`);
+  console.log(logInfo(queue) + `🎶 | Track ${track.title} queued!`);
+  queue.metadata.send(`🎶 | Track [${track.title}](${track.url}) queued!`);
 });
 
 player.on('botDisconnect', queue => {
@@ -58,19 +73,6 @@ player.on('queueEnd', queue => {
 
 client.once('ready', async () => {
   console.log('Ready!');
-
-  /*
-  for (const guild of client.guilds.cache) {
-    guild.commands
-      .set(client.commands)
-      .then(() => {
-        console.log(`🚀 Deploying to ${g.name}...`);
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
-  */
 
   await Promise.all(
     client.guilds.cache.map(async guild => {
