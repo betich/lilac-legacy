@@ -8,7 +8,7 @@ module.exports = {
 
     const currentTrack = queue.current;
     const tracks = queue.tracks.slice(0, 10).map((m, i) => {
-      return `${i + 1}. **${m.title}** ([link](${m.url}))`;
+      return `${i + 1}. ${m.duration} ([${m.title}](${m.url}))`;
     });
 
     return void interaction.followUp({
@@ -28,7 +28,7 @@ module.exports = {
           fields: [
             {
               name: 'Now Playing',
-              value: `🎶 | [${currentTrack.duration}] ([**${currentTrack.title}**](${currentTrack.url}))`,
+              value: `🎶 [${currentTrack.duration}] [${currentTrack.title}](${currentTrack.url})`,
             },
           ],
         },

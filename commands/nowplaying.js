@@ -3,7 +3,7 @@ const { GuildMember } = require('discord.js');
 module.exports = {
   name: 'nowplaying',
   description: 'Get the song that is currently playing.',
-  async execute(interaction, player) {
+  async execute(interaction, player, client) {
     if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
       return void interaction.reply({
         content: 'You are not in a voice channel!',
@@ -34,14 +34,14 @@ module.exports = {
       embeds: [
         {
           title: 'Now Playing',
-          description: `🎶 | **${queue.current.title}**! (\`${perc.progress}%\`)`,
+          description: `🎶 [${queue.current.duration}] [${queue.current.title}](${queue.current.url}) (\`${perc.progress}%\`)`,
           fields: [
             {
               name: '\u200b',
               value: progress,
             },
           ],
-          color: 0xffffff,
+          color: client.config.color,
         },
       ],
     });
