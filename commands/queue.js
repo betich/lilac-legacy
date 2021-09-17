@@ -25,7 +25,12 @@ module.exports = {
               : ''
           }`,
           color: client.config.color,
-          fields: [{ name: 'Now Playing', value: `🎶 | **${currentTrack.title}** ([link](${currentTrack.url}))` }],
+          fields: [
+            {
+              name: 'Now Playing',
+              value: `🎶 | [${currentTrack.duration}] ([**${currentTrack.title}**](${currentTrack.url}))`,
+            },
+          ],
         },
       ],
     });

@@ -59,18 +59,32 @@ player.on('queueEnd', queue => {
 client.once('ready', async () => {
   console.log('Ready!');
 
-  await client.guilds.cache.forEach(async g => {
-    await g.commands
+  /*
+  for (const guild of client.guilds.cache) {
+    guild.commands
       .set(client.commands)
       .then(() => {
         console.log(`🚀 Deploying to ${g.name}...`);
       })
-      .then(() => {
-        console.log(`🚀 Deployed to ${client.guilds.cache.size} servers`);
-      })
       .catch(err => {
         console.error(err);
       });
+  }
+  */
+
+  await Promise.all(
+    client.guilds.cache.map(async guild => {
+      await guild.commands
+        .set(client.commands)
+        .then(() => {
+          console.log(`🚀 Deploying to ${guild.name}...`);
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }),
+  ).then(() => {
+    console.log(`🚀 Deployed to ${client.guilds.cache.size} servers`);
   });
 
   client.user.setActivity(`with your feelings`, { type: 'PLAYING' });
