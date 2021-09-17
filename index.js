@@ -80,6 +80,8 @@ client.once('disconnect', () => {
 });
 
 client.on('messageCreate', async message => {
+  console.log(`message: ${message.content}`);
+
   if (message.author.bot || !message.guild) return;
   if (!client.application?.owner) await client.application?.fetch();
 
