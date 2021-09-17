@@ -4,7 +4,9 @@ const Client = require('./client/Client');
 const { token, prefix } = require('./config.js');
 const { Player } = require('discord-player');
 
-const client = new Client({ color: 0x7734eb });
+// purple 0x7734eb
+// black 0x262626
+const client = new Client({ color: 0x262626 });
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -34,11 +36,11 @@ player.on('connectionError', (queue, error) => {
 
 player.on('trackStart', (queue, track) => {
   console.log(logInfo(queue) + `🎶 | Started playing: ${track.title} in ${queue.connection.channel.name}!`);
-  // queue.metadata.send(`🎶 | Started playing: [${track.title}](${track.url}) in ${queue.connection.channel.name}!`);
+  /*
   queue.metadata.send({
     embeds: [
       {
-        title: '🎶 | Started playing',
+        title: 'Started playing 🎶',
         color: client.config.color,
         fields: [
           {
@@ -49,26 +51,57 @@ player.on('trackStart', (queue, track) => {
       },
     ],
   });
+  */
 });
 
 player.on('trackAdd', (queue, track) => {
   console.log(logInfo(queue) + `🎶 | Track ${track.title} queued!`);
-  queue.metadata.send(`🎶 | Track [${track.title}](${track.url}) queued!`);
+  queue.metadata.send({
+    embeds: [
+      {
+        description: `Queued [${track.title}](${track.url}) [<@${track.requestedBy.id}>]`,
+        color: client.config.color,
+      },
+    ],
+  });
 });
 
 player.on('botDisconnect', queue => {
-  console.log(logInfo(queue) + '❌ | I was manually disconnected from the voice channel, clearing queue!');
-  queue.metadata.send('❌ | I was manually disconnected from the voice channel, clearing queue!');
+  console.log(logInfo(queue) + '❌ | I was manually disconnected from the voice channel, clearing queue.');
+  queue.metadata.send({
+    embeds: [
+      {
+        description: '❌ | I was manually disconnected from the voice channel, clearing queue.',
+        color: client.config.color,
+      },
+    ],
+  });
 });
 
 player.on('channelEmpty', queue => {
   console.log(logInfo(queue) + '❌ | Nobody is in the voice channel, leaving...');
-  queue.metadata.send('❌ | Nobody is in the voice channel, leaving...');
+  queue.metadata.send({
+    embeds: [
+      {
+        description: '❌ | Nobody is in the voice channel, leaving...',
+        color: client.config.color,
+      },
+    ],
+  });
 });
 
 player.on('queueEnd', queue => {
   console.log(logInfo(queue) + '✅ | Queue finished!');
-  queue.metadata.send('✅ | Queue finished!');
+  /*
+  queue.metadata.send({
+    embeds: [
+      {
+        description: '✅ | Queue finished!',
+        color: client.config.color,
+      },
+    ],
+  });
+  */
 });
 
 client.once('ready', async () => {
