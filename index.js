@@ -68,7 +68,7 @@ client.on('messageCreate', async message => {
   if (message.author.bot || !message.guild) return;
   if (!client.application?.owner) await client.application?.fetch();
 
-  if (message.content === `${prefix}deploy`) {
+  if (message.content === `${prefix}deploy` || message.content === `${prefix}setup`) {
     await message.guild.commands
       .set(client.commands)
       .then(() => {
