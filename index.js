@@ -142,7 +142,7 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.on('guildCreate', async guild => {
-  console.log(`Joined ${guild.name}`);
+  console.log(`👋 Joined ${guild.name}`);
 
   await guild.commands
     .set(client.commands)
