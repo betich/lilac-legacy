@@ -17,7 +17,9 @@ console.log(client.commands);
 
 const player = new Player(client);
 
-const logInfo = queue => `${new Date()} | ${queue.guild.name} | `;
+const d = new Date();
+const timeLog = `${d.getUTCDate()}/${d.getUTCMonth()+1}/${d.getUTCFullYear()} ${d.toLocaleTimeString('th-TH', { timeZone: 'Asia/Bangkok' })}`
+const logInfo = queue => `${timeLog} | ${queue.guild.name} | `;
 
 player.on('error', (queue, error) => {
   console.error(logInfo(queue) + `[${queue.guild.name}] Error emitted from the queue: ${error.message}`);
