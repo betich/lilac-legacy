@@ -59,13 +59,14 @@ player.on('queueEnd', queue => {
 client.once('ready', async () => {
   console.log('Ready!');
 
-  console.log(`🚀 Deploying to ${client.guilds.cache.size} servers`);
-
   await client.guilds.cache.forEach(async g => {
     await g.commands
       .set(client.commands)
       .then(() => {
-        console.log(`🚀 Deployed to ${g.name}`);
+        console.log(`🚀 Deploying to ${g.name}...`);
+      })
+      .then(() => {
+        console.log(`🚀 Deployed to ${client.guilds.cache.size} servers`);
       })
       .catch(err => {
         console.error(err);
