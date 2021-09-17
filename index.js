@@ -61,7 +61,7 @@ client.once('ready', async () => {
     await g.commands
       .set(client.commands)
       .then(() => {
-        console.log(`Deployed to ${g.name}!`);
+        console.log(`Deployed to ${g.name}`);
       })
       .catch(err => {
         console.error(err);
@@ -138,12 +138,12 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.on('guildCreate', async guild => {
-  console.log(`Joined ${guild.name}!`);
+  console.log(`Joined ${guild.name}`);
 
   await guild.commands
     .set(client.commands)
     .then(() => {
-      console.log(`Deployed to ${g.name}!`);
+      console.log(`Deployed to ${g.name}`);
     })
     .catch(err => {
       console.error(err);
