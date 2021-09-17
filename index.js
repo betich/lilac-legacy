@@ -143,7 +143,7 @@ client.on('guildCreate', async guild => {
   await guild.commands
     .set(client.commands)
     .then(() => {
-      console.log(`Deployed to ${g.name}`);
+      console.log(`Deployed to ${guild.name}`);
     })
     .catch(err => {
       console.error(err);
