@@ -3,12 +3,12 @@ const sendError = (type, client) => {
     case 'no_channel':
       return {
         description: 'You are not in a voice channel!',
-        color: client.config.color,
+        color: client.config.errorColor,
       };
     case 'not_bot_channel':
       return {
         description: 'You are not in my voice channel!',
-        color: client.config.color,
+        color: client.config.errorColor,
       };
     case 'no_current_music':
       return {
