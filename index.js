@@ -17,7 +17,7 @@ for (const file of commandFiles) {
 
 console.log(client.commands);
 
-const player = new Player(client, { connectionTimeout: 5 * 3600 }); // 5 mins
+const player = new Player(client, { connectionTimeout: 5 * 3600 * 1000 }); // 5 mins
 
 // just logging things hehe
 const d = new Date();
@@ -36,22 +36,24 @@ player.on('connectionError', (queue, error) => {
 
 player.on('trackStart', (queue, track) => {
   console.log(logInfo(queue) + `🎶 | Started playing: ${track.title} in ${queue.connection.channel.name}!`);
-  /*
-  queue.metadata.send({
-    embeds: [
-      {
-        title: 'Started playing 🎶',
-        color: client.config.color,
-        fields: [
-          {
-            name: 'Now Playing',
-            value: `🎶 [${track.duration}] [${track.title}](${track.url})`,
-          },
-        ],
-      },
-    ],
-  });
-  */
+
+  queue.metadata
+    .send({
+      embeds: [
+        {
+          color: client.config.color,
+          fields: [
+            {
+              name: 'Now Playing 🎶',
+              value: `[${track.duration}] [${track.title}](${track.url}) [<@${track.requestedBy.id}>]`,
+            },
+          ],
+        },
+      ],
+    })
+    .then(msg => {
+      setTimeout(() => msg.delete(), 30 * 1000);
+    });
 });
 
 player.on('trackAdd', (queue, track) => {
