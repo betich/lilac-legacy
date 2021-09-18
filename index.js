@@ -23,7 +23,7 @@ const player = new Player(client);
 const timeLog = () => {
   const d = new Date();
 
-  `${d.getUTCDate()}/${d.getUTCMonth() + 1}/${d.getUTCFullYear()} ${d.toLocaleTimeString('th-TH', {
+  return `${d.getUTCDate()}/${d.getUTCMonth() + 1}/${d.getUTCFullYear()} ${d.toLocaleTimeString('th-TH', {
     timeZone: 'Asia/Bangkok',
   })}`;
 };
