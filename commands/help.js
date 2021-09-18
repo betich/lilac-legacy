@@ -3,7 +3,7 @@ const fs = require('fs');
 module.exports = {
   name: 'help',
   description: 'List all available commands.',
-  execute(interaction) {
+  execute(interaction, player, client) {
     let str = '';
     const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
