@@ -54,8 +54,7 @@ module.exports = {
       const queue = await player.createQueue(interaction.guild, {
         metadata: interaction.channel,
         leaveOnEnd: false,
-        leaveOnStop: false,
-        leaveOnEmptyCooldown: 10 * 1000,
+        leaveOnStop: false
       });
 
       try {

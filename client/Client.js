@@ -10,6 +10,8 @@ module.exports = class extends Client {
 
     this.queue = new Map();
 
+    this.activeConnections = new Map();
+
     this.config = config;
   }
 };

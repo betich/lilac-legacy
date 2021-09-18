@@ -7,6 +7,8 @@ const { Player } = require('discord-player');
 // purple 0x7734eb
 // black 0x262626
 const client = new Client({ color: 0x262626, errorColor: 0xfc0f03 });
+client.on('error', console.error);
+client.on('warn', console.warn);
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -22,7 +24,8 @@ const d = new Date();
 const timeLog = `${d.getUTCDate()}/${d.getUTCMonth() + 1}/${d.getUTCFullYear()} ${d.toLocaleTimeString('th-TH', {
   timeZone: 'Asia/Bangkok',
 })}`;
-const logInfo = queue => `${timeLog} | ${queue.guild.name} | `;
+
+const logInfo = queue => `${timeLog} | ${queue?.guild?.name ?? '📝'} | `;
 
 player.on('error', (queue, error) => {
   console.error(logInfo(queue) + `[${queue.guild.name}] Error emitted from the queue: ${error.message}`);
@@ -54,6 +57,10 @@ player.on('trackStart', (queue, track) => {
     });
 });
 
+player.on('connectionCreate', (queue, connection) => {
+  client.activeConnections.set(connection.channel.guildId, { connection, manualDisconnect: false });
+});
+
 player.on('trackAdd', (queue, track) => {
   console.log(logInfo(queue) + `🎶 | Track ${track.title} queued!`);
   /*
@@ -69,7 +76,9 @@ player.on('trackAdd', (queue, track) => {
 });
 
 player.on('botDisconnect', queue => {
-  console.log(logInfo(queue) + '❌ | I was manually disconnected from the voice channel, clearing queue...');
+  console.log(logInfo(queue) + '❌ | Bot has been disconnected from the voice channel');
+
+  /*
   queue.metadata.send({
     embeds: [
       {
@@ -78,32 +87,64 @@ player.on('botDisconnect', queue => {
       },
     ],
   });
+  */
 });
 
 player.on('channelEmpty', queue => {
   console.log(logInfo(queue) + '❌ | Nobody is in the voice channel, leaving...');
+
+  // disconnect bot
+  const { connection: currentConnection } = client.activeConnections.get(queue.metadata.guildId);
+
+  client.activeConnections.set(currentConnection.channel.guildId, {
+    connection: currentConnection,
+    manualDisconnect: true,
+  }); // manual disconnect
+  currentConnection.disconnect();
+
   queue.metadata.send({
     embeds: [
       {
         description: 'Nobody is in the voice channel, leaving...',
-        color: client.config.errorColor,
+        color: client.config.color,
       },
     ],
   });
 });
 
-player.on('queueEnd', queue => {
+player.on('queueEnd', async queue => {
   console.log(logInfo(queue) + '✅ | Queue finished!');
-  /*
-  queue.metadata.send({
-    embeds: [
-      {
-        description: '✅ | Queue finished!',
-        color: client.config.color,
-      },
-    ],
+
+  // disconnect bot
+  const { connection: currentConnection, manualDisconnect } = client.activeConnections.get(queue.metadata.guildId);
+
+  if (manualDisconnect) {
+    return void client.activeConnections.set(currentConnection.channel.guildId, {
+      connection: currentConnection,
+      manualDisconnect: false,
+    }); // manual disconnect
+  }
+
+  // set a timer for when the bot disconnects
+  const disconnectTimer = setTimeout(() => {
+    console.log(logInfo(queue) + 'disconnecting due to inactvity');
+
+    currentConnection.disconnect();
+
+    queue.metadata.send({
+      embeds: [
+        {
+          description:
+            'Disconnected due to inactivity. If you want me to stay in the voice channel 24/7, please send me money irl (just kidding).',
+          color: client.config.color,
+        },
+      ],
+    });
+  }, 5 * 60 * 1000); // 5 mins
+
+  player.on('trackAdd', () => {
+    clearTimeout(disconnectTimer);
   });
-  */
 });
 
 client.once('ready', async () => {
@@ -119,9 +160,14 @@ client.once('ready', async () => {
         });
     }),
   ).then(() => {
-    console.log(`🚀 Deployed to ${client.guilds.cache.size} servers`);
+    console.log(`🚀 Deployed to ${client.guilds.cache.size} server${client.guilds.cache.size > 1 ? 's' : ''}`);
     console.log('Ready!');
   });
+
+  setInterval(() => {
+    const connections = client.activeConnections.size;
+    console.log(logInfo() + `Connected to ${connections} voice channel${connections > 1 ? 's' : ''}`);
+  }, 1 * 60 * 1000); // every 1 min
 
   client.user.setActivity(`with your feelings`, { type: 'PLAYING' });
 });

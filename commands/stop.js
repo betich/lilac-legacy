@@ -32,7 +32,7 @@ module.exports = {
     return void interaction.followUp({
       embeds: [
         {
-          description: '🛑 | Stopped the player!',
+          description: 'Stopped the player 🛑',
           color: client.config.color,
         },
       ],
