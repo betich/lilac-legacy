@@ -54,21 +54,11 @@ node index.js
 
 ```bash
 # Build the image
-docker build --tag discordbot .
+docker build --tag lilac .
 
 # Run the image
-docker run -d discordbot
+docker run -d lilac
 ```
-
-## Deploying commands
-
-Before you can use the bots slash command you first need to add them to your Discord server. You can use the `!deploy` command to do so.
-
-<img src="./assets/deploy-commands.png">
-
-After deploying the commands you should be able to see and access them by typing a slash:
-
-<img src="./assets/commands.png">
 
 ## Features & Commands
 
