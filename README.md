@@ -1,24 +1,22 @@
-# Discord Music bot
+<h1 align="center">Lilac</h1>
 
-A simple discord bot that helps you manage your server by providing useful commands like playing music or deleting text messages.
+<p align="center">A simple discord bot just for playing music.</p>
 
-You can find the tutorial about building a discord music bot [here](https://gabrieltanner.org/blog/dicord-music-bot). 
+<img src="./assets/how-to-use.png" align="center">
 
-## Table of content
+## Table of contents
 
 * [Requirements](#requirements)
 * [Getting started](#getting-started)
 * [Common errors](#common-errors)
 * [Contributing](#contributing)
-* [Author](#author)
 * [License](#license)
 
 ## Requirements
 
-- [Node](https://nodejs.org/en/) - Version 16 or higher
+- [Node.js](https://nodejs.org/en/) - Version 16 or higher
 - [NPM](https://www.npmjs.com/)
 - [FFMPEG](https://www.ffmpeg.org/)
-- [Docker](https://www.docker.com/) (optional)
 
 ## Getting started
 
@@ -28,13 +26,14 @@ First, make sure you have all the required tools installed on your local machine
 
 ```bash
 # Clone the repository
-git clone https://github.com/TannerGabriel/discord-bot.git
+git clone https://github.com/betich/lilac.git
 
 # Enter into the directory
-cd discord-bot/
+cd lilac/
 
 # Install the dependencies
-npm install
+npm install # npm
+yarn install # yarn
 ```
 
 ## Required permissions
@@ -73,38 +72,37 @@ After deploying the commands you should be able to see and access them by typing
 
 ## Features & Commands
 
-> Note: The repository now uses the new Discord slash commands
+`/play YOUTUBE_URL`
 
 * 🎶 Play music from YouTube via url
 
-`/play YOUTUBE_URL`
+`/play SONG_NAME`
 
 * 🎶 Play music from using song name
 
-`/play SONG_NAME`
+`/pause`
 
 * 📃 Pause music
 
-`/pause`
+`/resume`
 
 * 🎓 Resume music
 
-`/resume`
+`/skip`
 
 * 💿 Skip song
 
-`/skip`
+`/stop`
 
 * 🔇 Stop music
 
-`/stop`
+`/nowplaying`
 
-* Now Playing (/nowplaying)
-* Get information about a user (/userinfo USER)
-* Ban a player (/ban USER)
-* Delete the latest chat messages (/purge NUM_OF_MESSAGES)
+* ▶ Now Playing
 
-<img src="./assets/playing_song.png">
+`/purge`
+
+* 🚮 Delete the latest chat messages
 
 ## Common errors
 
@@ -124,16 +122,21 @@ The `play` command requires FFMPEG to be installed on the machine that is runnin
 
 ## Contributing
 
-You are welcome to contribute by submitting a Pull Request to the repository.
-
-## Author
-
-[Gabriel Tanner](https://gabrieltanner.org/)
-
-## Support me
-
-<a href="https://www.buymeacoffee.com/gabrieltanner" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+You are welcome to contribute by submitting a Pull Request to the repository. 🤍
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
+
+## Credit
+
+This bot is a fork of [this music bot](https://github.com/TannerGabriel/discord-bot).
+
+### Libraries
+
+* [discord.js](https://www.npmjs.com/package/discord.js)
+* [discord-player](https://www.npmjs.com/package/discord-player)
+* [ytdl](https://www.npmjs.com/package/ytdl-core)
+* [ffmpeg](https://www.ffmpeg.org/)
+
+<p align="center">Made with 🤍 by betich</p>
