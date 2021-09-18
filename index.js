@@ -15,9 +15,7 @@ for (const file of commandFiles) {
   client.commands.set(command.name, command);
 }
 
-console.log(client.commands);
-
-const player = new Player(client, { connectionTimeout: 5 * 3600 * 1000 }); // 5 mins
+const player = new Player(client);
 
 // just logging things hehe
 const d = new Date();
@@ -71,12 +69,12 @@ player.on('trackAdd', (queue, track) => {
 });
 
 player.on('botDisconnect', queue => {
-  console.log(logInfo(queue) + '❌ | I was manually disconnected from the voice channel, clearing queue.');
+  console.log(logInfo(queue) + '❌ | I was manually disconnected from the voice channel, clearing queue...');
   queue.metadata.send({
     embeds: [
       {
-        description: 'I was manually disconnected from the voice channel, clearing queue.',
-        color: client.config.errorColor,
+        description: 'I was manually disconnected from the voice channel, clearing queue...',
+        color: client.config.color,
       },
     ],
   });
@@ -109,8 +107,6 @@ player.on('queueEnd', queue => {
 });
 
 client.once('ready', async () => {
-  console.log('Ready!');
-
   await Promise.all(
     client.guilds.cache.map(async guild => {
       await guild.commands
@@ -124,6 +120,7 @@ client.once('ready', async () => {
     }),
   ).then(() => {
     console.log(`🚀 Deployed to ${client.guilds.cache.size} servers`);
+    console.log('Ready!');
   });
 
   client.user.setActivity(`with your feelings`, { type: 'PLAYING' });
