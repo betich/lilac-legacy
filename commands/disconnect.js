@@ -16,6 +16,8 @@ module.exports = {
         manualDisconnect: true,
       }); // manual disconnect
 
+      const queue = player.getQueue(interaction.guildId);
+      await queue.clear();
       await currentConnection.disconnect();
 
       return void interaction.followUp({

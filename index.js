@@ -79,30 +79,22 @@ player.on('trackAdd', (queue, track) => {
 });
 
 player.on('botDisconnect', queue => {
-  console.log(logInfo(queue) + '❌ | Bot has been disconnected from the voice channel');
-
-  /*
-  queue.metadata.send({
-    embeds: [
-      {
-        description: 'I was manually disconnected from the voice channel, clearing queue...',
-        color: client.config.color,
-      },
-    ],
-  });
-  */
+  console.log(logInfo(queue) + '❌ | Bot has been manually disconnected from the voice channel');
 });
 
 player.on('channelEmpty', queue => {
   console.log(logInfo(queue) + '❌ | Nobody is in the voice channel, leaving...');
 
-  // disconnect bot
+  // get info about the connection
   const { connection: currentConnection } = client.activeConnections.get(queue.metadata.guildId);
 
+  // disconnect (and thus clearning the queue)
   client.activeConnections.set(currentConnection.channel.guildId, {
     connection: currentConnection,
     manualDisconnect: true,
-  }); // manual disconnect
+  }); // manual disconnect (set so the empty queue timeout doesn't fire)
+
+  if (queue) queue.clear();
   currentConnection.disconnect();
 
   queue.metadata.send({
@@ -118,21 +110,23 @@ player.on('channelEmpty', queue => {
 player.on('queueEnd', async queue => {
   console.log(logInfo(queue) + '✅ | Queue finished!');
 
-  // disconnect bot
+  // get the connection info
   const { connection: currentConnection, manualDisconnect } = client.activeConnections.get(queue.metadata.guildId);
 
+  // if the bot is intentionally disconnected (from commands, empty array), don't do anything else
   if (manualDisconnect) {
-    return void client.activeConnections.set(currentConnection.channel.guildId, {
-      connection: currentConnection,
-      manualDisconnect: false,
-    }); // manual disconnect
+    // delete the connection info from the connections Map
+    return void client.activeConnections.delete(currentConnection.channel.guildId);
   }
 
-  // set a timer for when the bot disconnects
+  // set a timer from when the queue ends, if done disconnect the bot
   const disconnectTimer = setTimeout(() => {
     console.log(logInfo(queue) + 'disconnecting due to inactvity');
 
     currentConnection.disconnect();
+
+    // delete the connection info from the connections Map
+    client.activeConnections.delete(currentConnection.channel.guildId);
 
     queue.metadata.send({
       embeds: [
@@ -151,6 +145,7 @@ player.on('queueEnd', async queue => {
 });
 
 client.once('ready', async () => {
+  // set up commands
   await Promise.all(
     client.guilds.cache.map(async guild => {
       await guild.commands
@@ -167,6 +162,7 @@ client.once('ready', async () => {
     console.log('Ready!');
   });
 
+  // log all connections
   setInterval(() => {
     const connections = client.activeConnections.size;
     console.log(logInfo() + `Connected to ${connections} voice channel${connections > 1 ? 's' : ''}`);
