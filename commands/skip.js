@@ -28,7 +28,12 @@ module.exports = {
     const currentTrack = queue.current;
     const success = queue.skip();
     return void interaction.followUp({
-      content: success ? `✅ | Skipped **${currentTrack}**!` : '❌ | Something went wrong!',
+      embeds: [
+        {
+          description: success ? `Skipped to the next song 😊` : 'Something went wrong',
+          color: success ? client.config.color : client.config.errorColor,
+        },
+      ],
     });
   },
 };

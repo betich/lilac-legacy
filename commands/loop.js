@@ -41,7 +41,12 @@ module.exports = {
     const mode = loopMode === QueueRepeatMode.TRACK ? '🔂' : loopMode === QueueRepeatMode.QUEUE ? '🔁' : '▶';
 
     return void interaction.followUp({
-      content: success ? `${mode} | Updated loop mode!` : '❌ | Could not update loop mode!',
+      embeds: [
+        {
+          description: success ? `${mode} | Updated loop mode` : 'Could not update loop mode',
+          color: success ? client.config.color : client.config.errorColor,
+        },
+      ],
     });
   },
 };

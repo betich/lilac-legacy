@@ -7,7 +7,7 @@ module.exports = {
   async execute(interaction, player, client) {
     if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
       return void interaction.reply({
-        content: 'You are not in a voice channel!',
+        embeds: [sendError('no_channel', client)],
         ephemeral: true,
       });
     }
@@ -17,7 +17,7 @@ module.exports = {
       interaction.member.voice.channelId !== interaction.guild.me.voice.channelId
     ) {
       return void interaction.reply({
-        content: 'You are not in my voice channel!',
+        embeds: [sendError('not_bot_channel', client)],
         ephemeral: true,
       });
     }
@@ -32,8 +32,8 @@ module.exports = {
     return void interaction.followUp({
       embeds: [
         {
-          description: success ? '⏸ | Paused!' : '❌ | Something went wrong!',
-          color: client.config.color,
+          description: success ? 'Paused ⏸' : 'Something went wrong!',
+          color: success ? client.config.color : client.config.errorColor,
         },
       ],
     });

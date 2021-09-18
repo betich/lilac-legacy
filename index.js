@@ -6,7 +6,7 @@ const { Player } = require('discord-player');
 
 // purple 0x7734eb
 // black 0x262626
-const client = new Client({ color: 0x262626 });
+const client = new Client({ color: 0x262626, errorColor: 0xfc0f03 });
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -71,8 +71,8 @@ player.on('botDisconnect', queue => {
   queue.metadata.send({
     embeds: [
       {
-        description: '❌ | I was manually disconnected from the voice channel, clearing queue.',
-        color: client.config.color,
+        description: 'I was manually disconnected from the voice channel, clearing queue.',
+        color: client.config.errorColor,
       },
     ],
   });
@@ -83,8 +83,8 @@ player.on('channelEmpty', queue => {
   queue.metadata.send({
     embeds: [
       {
-        description: '❌ | Nobody is in the voice channel, leaving...',
-        color: client.config.color,
+        description: 'Nobody is in the voice channel, leaving...',
+        color: client.config.errorColor,
       },
     ],
   });
@@ -186,7 +186,7 @@ client.on('interactionCreate', async interaction => {
   } catch (error) {
     console.error(error);
     interaction.followUp({
-      content: 'There was an error trying to execute that command!',
+      embeds: [{ description: 'There was an error trying to execute that command', color: client.config.errorColor }],
     });
   }
 });

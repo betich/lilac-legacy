@@ -13,7 +13,7 @@ module.exports = {
     }
 
     return void interaction.reply({
-      content: str,
+      embeds: [{ description: str, color: client.config.color }],
       ephemeral: true,
     });
   },

@@ -12,8 +12,8 @@ const sendError = (type, client) => {
       };
     case 'no_current_music':
       return {
-        description: '❌ | No music is being played',
-        color: client.config.color,
+        description: 'No music is being played',
+        color: client.config.errorColor,
       };
     default:
       return {

@@ -32,8 +32,8 @@ module.exports = {
     return void interaction.followUp({
       embeds: [
         {
-          description: success ? '▶ | Resumed!' : '❌ | Something went wrong',
-          color: client.config.color,
+          description: success ? 'Resumed ▶' : 'Something went wrong',
+          color: success ? client.config.color : client.config.errorColor,
         },
       ],
     });
