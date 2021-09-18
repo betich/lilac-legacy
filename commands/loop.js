@@ -1,4 +1,5 @@
 const { QueueRepeatMode } = require('discord-player');
+const { sendError } = require('../utils/logs');
 
 module.exports = {
   name: 'loop',
@@ -29,11 +30,11 @@ module.exports = {
       ],
     },
   ],
-  async execute(interaction, player) {
+  async execute(interaction, player, client) {
     await interaction.deferReply();
 
     const queue = player.getQueue(interaction.guildId);
-    if (!queue || !queue.playing) return void interaction.followUp({ content: '❌ | No music is being played!' });
+    if (!queue || !queue.playing) return void interaction.followUp({ embeds: [sendError('no_current_music', client)] });
 
     const loopMode = interaction.options.get('mode').value;
     const success = queue.setRepeatMode(loopMode);

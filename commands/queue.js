@@ -1,20 +1,21 @@
+const { sendError } = require('../utils/logs');
+
 module.exports = {
   name: 'queue',
   description: 'See the queue',
   async execute(interaction, player, client) {
     await interaction.deferReply();
     const queue = player.getQueue(interaction.guildId);
-    if (!queue || !queue.playing) return void interaction.followUp({ content: '❌ | No music is being played!' });
+    if (!queue || !queue.playing) return void interaction.followUp({ embeds: [sendError('no_current_music', client)] });
 
     const currentTrack = queue.current;
     const tracks = queue.tracks.slice(0, 10).map((m, i) => {
-      return `${i + 1}. ${m.duration} ([${m.title}](${m.url}))`;
+      return `${i + 1}. ${m.duration} ([${m.title}](${m.url})) [<@${m.requestedBy.id}>]`;
     });
 
     return void interaction.followUp({
       embeds: [
         {
-          title: 'Server Queue',
           description: `${tracks.join('\n')}${
             queue.tracks.length > tracks.length
               ? `\n...${

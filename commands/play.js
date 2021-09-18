@@ -1,6 +1,6 @@
 const { GuildMember } = require('discord.js');
 const { QueryType } = require('discord-player');
-const { executeMessage } = require('./ping');
+const { sendError } = require('../utils/logs');
 
 module.exports = {
   name: 'play',
@@ -13,11 +13,11 @@ module.exports = {
       required: true,
     },
   ],
-  async execute(interaction, player) {
+  async execute(interaction, player, client) {
     try {
       if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
         return void interaction.reply({
-          content: 'You are not in a voice channel!',
+          embeds: [sendError('no_channel', client)],
           ephemeral: true,
         });
       }
@@ -27,7 +27,7 @@ module.exports = {
         interaction.member.voice.channelId !== interaction.guild.me.voice.channelId
       ) {
         return void interaction.reply({
-          content: 'You are not in my voice channel!',
+          embeds: [sendError('not_bot_channel', client)],
           ephemeral: true,
         });
       }
@@ -42,7 +42,14 @@ module.exports = {
         })
         .catch(() => {});
       if (!searchResult || !searchResult.tracks.length)
-        return void interaction.followUp({ content: 'No results were found!' });
+        return void interaction.followUp({
+          embeds: [
+            {
+              description: 'No results were found!',
+              color: client.config.color,
+            },
+          ],
+        });
 
       const queue = await player.createQueue(interaction.guild, {
         metadata: interaction.channel,
@@ -53,7 +60,12 @@ module.exports = {
       } catch {
         void player.deleteQueue(interaction.guildId);
         return void interaction.followUp({
-          content: 'Could not join your voice channel!',
+          embeds: [
+            {
+              description: 'Could not join your voice channel!',
+              color: client.config.color,
+            },
+          ],
         });
       }
 
@@ -65,9 +77,13 @@ module.exports = {
     } catch (error) {
       console.log(error);
       interaction.followUp({
-        content: 'There was an error trying to execute that command: ' + error.message,
+        embeds: [
+          {
+            description: `There was an error trying to execute that command: ${error.message}`,
+            color: client.config.color,
+          },
+        ],
       });
     }
   },
-  async executeMessage(message, player, client) {},
 };

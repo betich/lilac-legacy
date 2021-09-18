@@ -1,3 +1,5 @@
+const { Client } = require('discord.js');
+
 module.exports = {
   name: 'purge',
   description: 'Delete the last messages in all chats.',
@@ -9,11 +11,18 @@ module.exports = {
       required: true,
     },
   ],
-  async execute(interaction) {
+  async execute(interaction, player, client) {
     const deleteCount = interaction.options.get('num').value;
 
     if (!deleteCount || deleteCount < 2 || deleteCount > 100)
-      return message.reply('Please provide a number between 2 and 100 for the number of messages to delete');
+      return interaction.reply({
+        embeds: [
+          {
+            description: 'Please provide a number between 2 and 100 for the number of messages to delete',
+            color: client.config.color,
+          },
+        ],
+      });
 
     const fetched = await interaction.channel.messages.fetch({
       limit: deleteCount,
@@ -23,13 +32,23 @@ module.exports = {
       .bulkDelete(fetched)
       .then(() => {
         interaction.reply({
-          content: `Succesfully deleted messages`,
+          embeds: [
+            {
+              description: `Succesfully deleted ${deleteCount} messages`,
+              color: client.config.color,
+            },
+          ],
           ephemeral: true,
         });
       })
       .catch(error => {
         interaction.reply({
-          content: `Couldn't delete messages because of: ${error}`,
+          embeds: [
+            {
+              description: `Couldn't delete messages because of: ${error}`,
+              color: client.config.color,
+            },
+          ],
           ephemeral: true,
         });
       });

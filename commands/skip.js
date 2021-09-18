@@ -1,12 +1,13 @@
 const { GuildMember } = require('discord.js');
+const { sendError } = require('../utils/logs');
 
 module.exports = {
   name: 'skip',
   description: 'Skip a song!',
-  async execute(interaction, player) {
+  async execute(interaction, player, client) {
     if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
       return void interaction.reply({
-        content: 'You are not in a voice channel!',
+        embeds: [sendError('no_channel', client)],
         ephemeral: true,
       });
     }
@@ -16,14 +17,14 @@ module.exports = {
       interaction.member.voice.channelId !== interaction.guild.me.voice.channelId
     ) {
       return void interaction.reply({
-        content: 'You are not in my voice channel!',
+        embeds: [sendError('not_bot_channel', client)],
         ephemeral: true,
       });
     }
 
     await interaction.deferReply();
     const queue = player.getQueue(interaction.guildId);
-    if (!queue || !queue.playing) return void interaction.followUp({ content: '❌ | No music is being played!' });
+    if (!queue || !queue.playing) return void interaction.followUp({ embeds: [sendError('no_current_music', client)] });
     const currentTrack = queue.current;
     const success = queue.skip();
     return void interaction.followUp({
