@@ -20,12 +20,15 @@ for (const file of commandFiles) {
 const player = new Player(client);
 
 // just logging things hehe
-const d = new Date();
-const timeLog = `${d.getUTCDate()}/${d.getUTCMonth() + 1}/${d.getUTCFullYear()} ${d.toLocaleTimeString('th-TH', {
-  timeZone: 'Asia/Bangkok',
-})}`;
+const timeLog = () => {
+  const d = new Date();
 
-const logInfo = queue => `${timeLog} | ${queue?.guild?.name ?? '📝'} | `;
+  `${d.getUTCDate()}/${d.getUTCMonth() + 1}/${d.getUTCFullYear()} ${d.toLocaleTimeString('th-TH', {
+    timeZone: 'Asia/Bangkok',
+  })}`;
+};
+
+const logInfo = queue => `${timeLog()} | ${queue?.guild?.name ?? '📝'} | `;
 
 player.on('error', (queue, error) => {
   console.error(logInfo(queue) + `[${queue.guild.name}] Error emitted from the queue: ${error.message}`);
