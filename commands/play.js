@@ -70,8 +70,18 @@ module.exports = {
       }
 
       await interaction.followUp({
-        content: `⏱ | Loading your ${searchResult.playlist ? 'playlist' : 'track'}...`,
+        embeds: [
+          {
+            description: `Queued ${
+              searchResult.playlist
+                ? `${searchResult.tracks.length} tracks`
+                : `[${searchResult.tracks[0].title}](${searchResult.tracks[0].url})`
+            } [<@${interaction.member.id}>]`,
+            color: client.config.color,
+          },
+        ],
       });
+
       searchResult.playlist ? queue.addTracks(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
       if (!queue.playing) await queue.play();
     } catch (error) {
@@ -80,7 +90,7 @@ module.exports = {
         embeds: [
           {
             description: `There was an error trying to execute that command: ${error.message}`,
-            color: client.config.color,
+            color: client.config.errorColor,
           },
         ],
       });

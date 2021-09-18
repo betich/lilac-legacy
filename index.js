@@ -45,7 +45,7 @@ player.on('trackStart', (queue, track) => {
           fields: [
             {
               name: 'Now Playing 🎶',
-              value: `[${track.duration}] [${track.title}](${track.url}) [<@${track.requestedBy.id}>]`,
+              value: `[${track.title}](${track.url}) [<@${track.requestedBy.id}>]`,
             },
           ],
         },
@@ -58,6 +58,7 @@ player.on('trackStart', (queue, track) => {
 
 player.on('trackAdd', (queue, track) => {
   console.log(logInfo(queue) + `🎶 | Track ${track.title} queued!`);
+  /*
   queue.metadata.send({
     embeds: [
       {
@@ -66,6 +67,7 @@ player.on('trackAdd', (queue, track) => {
       },
     ],
   });
+  */
 });
 
 player.on('botDisconnect', queue => {
