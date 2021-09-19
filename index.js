@@ -80,6 +80,10 @@ player.on('trackAdd', (queue, track) => {
 
 player.on('botDisconnect', queue => {
   console.log(logInfo(queue) + '❌ | Bot has disconnected from the voice channel');
+
+  const { connection: currentConnection } = client.activeConnections.get(queue.metadata.guildId);
+
+  if (currentConnection) client.activeConnections.delete(currentConnection.channel.guildId);
 });
 
 player.on('queueEnd', async queue => {
