@@ -55,6 +55,7 @@ module.exports = {
         metadata: interaction.channel,
         leaveOnEnd: false,
         leaveOnStop: false,
+        leaveOnEmpty: false,
       });
 
       try {

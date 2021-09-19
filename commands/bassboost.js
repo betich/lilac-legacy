@@ -17,7 +17,7 @@ module.exports = {
     return void interaction.followUp({
       embeds: [
         {
-          descripiton: `🎵 | Bassboost ${queue.getFiltersEnabled().includes('bassboost') ? 'Enabled' : 'Disabled'}!`,
+          descripition: `🎵 | Bassboost ${queue.getFiltersEnabled().includes('bassboost') ? 'Enabled' : 'Disabled'}!`,
           color: client.config.color,
         },
       ],

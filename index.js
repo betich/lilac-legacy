@@ -31,11 +31,11 @@ const timeLog = () => {
 const logInfo = queue => `${timeLog()} | ${queue?.guild?.name ?? '📝'} | `;
 
 player.on('error', (queue, error) => {
-  console.error(logInfo(queue) + `[${queue.guild.name}] Error emitted from the queue: ${error.message}`);
+  console.error(logInfo(queue) + `⚠ Error emitted from the queue: ${error.message}`);
 });
 
 player.on('connectionError', (queue, error) => {
-  console.error(logInfo(queue) + `[${queue.guild.name}] Error emitted from the connection: ${error.message}`);
+  console.error(logInfo(queue) + `⚠ Error emitted from the connection: ${error.message}`);
 });
 
 player.on('trackStart', (queue, track) => {
@@ -79,32 +79,7 @@ player.on('trackAdd', (queue, track) => {
 });
 
 player.on('botDisconnect', queue => {
-  console.log(logInfo(queue) + '❌ | Bot has been manually disconnected from the voice channel');
-});
-
-player.on('channelEmpty', queue => {
-  console.log(logInfo(queue) + '❌ | Nobody is in the voice channel, leaving...');
-
-  // get info about the connection
-  const { connection: currentConnection } = client.activeConnections.get(queue.metadata.guildId);
-
-  // disconnect (and thus clearning the queue)
-  client.activeConnections.set(currentConnection.channel.guildId, {
-    connection: currentConnection,
-    manualDisconnect: true,
-  }); // manual disconnect (set so the empty queue timeout doesn't fire)
-
-  if (queue) queue.clear();
-  currentConnection.disconnect();
-
-  queue.metadata.send({
-    embeds: [
-      {
-        description: 'Nobody is in the voice channel, leaving...',
-        color: client.config.color,
-      },
-    ],
-  });
+  console.log(logInfo(queue) + '❌ | Bot has disconnected from the voice channel');
 });
 
 player.on('queueEnd', async queue => {
