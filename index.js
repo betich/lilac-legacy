@@ -227,6 +227,8 @@ client.on('messageCreate', async message => {
 client.on('interactionCreate', async interaction => {
   const command = client.commands.get(interaction.commandName.toLowerCase());
 
+  console.log(logInfo(), `Command ${command.name} has been called.`);
+
   try {
     command.execute(interaction, player, client);
   } catch (error) {
