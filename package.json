@@ -1,6 +1,6 @@
 {
   "name": "lilac",
-  "version": "1.2.0",
+  "version": "1.2.0b",
   "repository": "https://github.com/betich/lilac.git",
   "description": "a simple discord music bot",
   "main": "index.js",
@@ -14,7 +14,7 @@
     "music",
     "bot"
   ],
-  "author": "Gabriel Tanner",
+  "author": "betich",
   "license": "MIT",
   "dependencies": {
     "@discordjs/opus": "^0.6.0",
