@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node index.js --trace-warnings",
     "dev": "nodemon",
+    "prettier": "prettier --write \"**/*.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -26,6 +27,7 @@
     "ytdl-core": "^4.9.1"
   },
   "devDependencies": {
-    "nodemon": "2.0.12"
+    "nodemon": "2.0.12",
+    "prettier": "^2.4.1"
   }
 }
