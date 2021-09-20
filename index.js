@@ -45,13 +45,9 @@ player.on('trackStart', (queue, track) => {
     .send({
       embeds: [
         {
+          title: 'Now Playing 🎶',
+          description: '[${track.title}](${track.url}) [<@${track.requestedBy.id}>]',
           color: client.config.color,
-          fields: [
-            {
-              name: 'Now Playing 🎶',
-              value: `[${track.title}](${track.url}) [<@${track.requestedBy.id}>]`,
-            },
-          ],
         },
       ],
     })
