@@ -8,7 +8,7 @@ module.exports = {
       name: 'enabled',
       type: 'INTEGER',
       description: 'Status of the bassboost filter',
-      required: true,
+      required: false,
       choices: [
         {
           name: 'Off',
@@ -25,9 +25,21 @@ module.exports = {
     await interaction.deferReply();
     const queue = player.getQueue(interaction.guildId);
 
-    const filterEnabled = Boolean(interaction.options.get('enabled').value);
-
     if (!queue || !queue.playing) return void interaction.followUp({ embeds: [sendError('no_current_music', client)] });
+
+    const enabled = interaction.options.get('enabled');
+
+    if (!enabled && enabled !== 0)
+      return void interaction.followUp({
+        embeds: [
+          {
+            description: `🎵 Bassboost ${queue.getFiltersEnabled().includes('bassboost') ? 'Enabled' : 'Disabled'}!`,
+            color: client.config.color,
+          },
+        ],
+      });
+
+    const filterEnabled = Boolean(enabled.value);
 
     // old method: !queue.getFiltersEnabled().includes('bassboost')
     await queue.setFilters({
@@ -38,7 +50,7 @@ module.exports = {
     return void interaction.followUp({
       embeds: [
         {
-          description: `🎵 | Bassboost ${queue.getFiltersEnabled().includes('bassboost') ? 'Enabled' : 'Disabled'}!`,
+          description: `🎵 Bassboost ${queue.getFiltersEnabled().includes('bassboost') ? 'Enabled' : 'Disabled'}!`,
           color: client.config.color,
         },
       ],

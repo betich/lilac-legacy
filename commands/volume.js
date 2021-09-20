@@ -22,7 +22,7 @@ module.exports = {
       return void interaction.followUp({
         embeds: [
           {
-            description: `🎧 | Current volume is **${queue.volume}**%!`,
+            description: `🎧 Current volume is **${queue.volume}**%!`,
             color: client.config.color,
           },
         ],
@@ -32,7 +32,7 @@ module.exports = {
       return void interaction.followUp({
         embeds: [
           {
-            description: '❌ | Volume range must be 0-100',
+            description: '❌ Volume range must be 0-100',
             color: client.config.color,
           },
         ],
@@ -42,7 +42,7 @@ module.exports = {
     return void interaction.followUp({
       embeds: [
         {
-          description: success ? `✅ | Volume set to **${vol.value}%**!` : '❌ | Something went wrong!',
+          description: success ? `✅ Volume set to **${vol.value}%**!` : '❌ Something went wrong!',
           color: client.config.color,
         },
       ],
