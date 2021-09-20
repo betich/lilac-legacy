@@ -42,7 +42,7 @@ yarn install # yarn
 
 ### Configuration
 
-After cloning the project and installing all dependencies, you need to add your Discord API token and the bot's prefix in the a `.env` file.
+After cloning the project and installing all dependencies, you need to add your Discord API token and the bot's prefix in the `.env` file.
 
 `.env`
 ```env
