@@ -46,7 +46,7 @@ player.on('trackStart', (queue, track) => {
       embeds: [
         {
           title: 'Now Playing 🎶',
-          description: '[${track.title}](${track.url}) [<@${track.requestedBy.id}>]',
+          description: `[${track.title}](${track.url}) [<@${track.requestedBy.id}>]`,
           color: client.config.color,
         },
       ],
@@ -62,16 +62,10 @@ player.on('connectionCreate', (queue, connection) => {
 
 player.on('trackAdd', (queue, track) => {
   console.log(logInfo(queue) + `🎶 | Track ${track.title} queued!`);
-  /*
-  queue.metadata.send({
-    embeds: [
-      {
-        description: `Queued [${track.title}](${track.url}) [<@${track.requestedBy.id}>]`,
-        color: client.config.color,
-      },
-    ],
-  });
-  */
+
+  const { disconnectTimer: timer } = client.activeConnections.get(queue.metadata.guildId);
+
+  if (timer) clearTimeout(timer);
 });
 
 player.on('botDisconnect', queue => {
@@ -88,13 +82,19 @@ player.on('queueEnd', async queue => {
   console.log(logInfo(queue) + '✅ | Queue finished!');
 
   // get the connection info
-  const { connection: currentConnection, manualDisconnect } = client.activeConnections.get(queue.metadata.guildId);
+  const {
+    connection: currentConnection,
+    manualDisconnect,
+    disconnectTimer: timer,
+  } = client.activeConnections.get(queue.metadata.guildId);
 
   // if the bot is intentionally disconnected (from commands, empty array), don't do anything else
   if (manualDisconnect) {
     // delete the connection info from the connections Map
     return void client.activeConnections.delete(currentConnection.channel.guildId);
   }
+
+  if (timer) clearTimeout(timer);
 
   // set a timer from when the queue ends, if done disconnect the bot
   const disconnectTimer = setTimeout(() => {
@@ -116,9 +116,10 @@ player.on('queueEnd', async queue => {
     });
   }, 5 * 60 * 1000); // 5 mins
 
-  player.on('trackAdd', () => {
-    clearTimeout(disconnectTimer);
-  });
+  client.activeConnections.set(currentConnection.channel.guildId, {
+    connection: currentConnection,
+    disconnectTimer,
+  }); // set timer
 });
 
 client.once('ready', async () => {
