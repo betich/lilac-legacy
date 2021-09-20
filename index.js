@@ -73,8 +73,9 @@ player.on('botDisconnect', queue => {
 
   const connectionInfo = client.activeConnections.get(queue.metadata.guildId);
   if (!connectionInfo) return;
-  const { connection: currentConnection } = connectionInfo;
+  const { connection: currentConnection, disconnectTimer: timer } = connectionInfo;
 
+  if (timer) clearTimeout(timer);
   if (currentConnection) client.activeConnections.delete(currentConnection.channel.guildId);
 });
 
