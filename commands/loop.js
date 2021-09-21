@@ -43,7 +43,7 @@ module.exports = {
     return void interaction.followUp({
       embeds: [
         {
-          description: success ? `${mode} | Updated loop mode` : 'Could not update loop mode',
+          description: success ? `${mode} Updated loop mode` : 'Could not update loop mode',
           color: success ? client.config.color : client.config.errorColor,
         },
       ],

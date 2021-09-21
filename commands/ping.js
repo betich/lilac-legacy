@@ -10,7 +10,7 @@ module.exports = {
     return void interaction.followUp({
       embeds: [
         {
-          title: '⏱️ | Latency',
+          title: '⏱️ Latency',
           fields: [
             { name: 'Bot Latency', value: `\`${Math.round(client.ws.ping)}ms\`` },
             {
@@ -32,7 +32,7 @@ module.exports = {
 
     const queue = player.getQueue(message.guild);
     const embedResult = {
-      title: '⏱️ | Latency',
+      title: '⏱️ Latency',
       fields: [
         { name: 'Bot Latency', value: `\`${Math.round(client.ws.ping)}ms\`` },
         {
