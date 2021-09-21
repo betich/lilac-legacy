@@ -40,7 +40,10 @@ module.exports = {
           requestedBy: interaction.user,
           searchEngine: QueryType.AUTO,
         })
-        .catch(() => {});
+        .catch(err => {
+          console.error(`Error while searching: ${err}`);
+        });
+
       if (!searchResult || !searchResult.tracks.length)
         return void interaction.followUp({
           embeds: [
@@ -88,7 +91,7 @@ module.exports = {
       searchResult.playlist ? queue.addTracks(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
       if (!queue.playing) await queue.play();
     } catch (error) {
-      console.log(error);
+      console.error(`Error while playing a song: ${error}`);
       interaction.followUp({
         embeds: [
           {
