@@ -42,7 +42,7 @@ module.exports = {
     return void interaction.followUp({
       embeds: [
         {
-          description: success ? `✅ Volume set to **${vol.value}%**!` : '❌ Something went wrong!',
+          description: success ? `🎧 Volume set to **${vol.value}%**!` : '❌ Something went wrong!',
           color: client.config.color,
         },
       ],
