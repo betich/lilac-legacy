@@ -89,13 +89,13 @@ player.on('queueEnd', async queue => {
     disconnectTimer: timer,
   } = client.activeConnections.get(queue.metadata.guildId);
 
+  if (timer) clearTimeout(timer);
+
   // if the bot is intentionally disconnected (from commands, empty array), don't do anything else
   if (manualDisconnect) {
     // delete the connection info from the connections Map
     return void client.activeConnections.delete(currentConnection.channel.guildId);
   }
-
-  if (timer) clearTimeout(timer);
 
   // set a timer from when the queue ends, if done disconnect the bot
   const disconnectTimer = setTimeout(() => {
